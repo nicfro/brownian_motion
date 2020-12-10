@@ -77,12 +77,11 @@ class Particle:
         # check if particle is colliding with right or left wall
         if self.right >= settings["x_boundary"] or self.left <= 0:
             self.velocity_x = -self.velocity_x
-            #self.velocity = np.array([-self.velocity[0], self.velocity[1]])
 
         # check if particle is colliding with top or bottom wall
         if self.bottom >= settings["y_boundary"] or self.top <= 0:
             self.velocity_y = -self.velocity_y
-            #self.velocity = np.array([self.velocity[0], -self.velocity[1]])
+
 
         self.position += self.velocity
         self.update_properties()
