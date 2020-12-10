@@ -29,7 +29,8 @@ particles_array = []
 
 counter = 0
 for i in range(settings["number_of_particles"]):
-    particle = particles.Particle(identifier = counter, radius = settings["small_particle_radius"])
+    particle = particles.Particle(identifier = counter, radius = random.uniform(2, 20), density = random.uniform(2, 10))
+    #particle = particles.Particle(identifier = counter, radius = settings["small_particle_radius"])
     particles_array.append(particle)
     counter += 1
 
