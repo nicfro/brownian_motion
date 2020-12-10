@@ -4,6 +4,14 @@ import numpy as np
 import math
 
 
+# TODO 
+# 1)
+#  Create color scheme based on particle density
+# Implement color here & in main
+#
+# 2) 
+# Fix collision detection with delaunay triangulation
+
 class Particle:
     def __init__(self, identifier, radius = 1, velocity = None, density = 2):
         self.identifier = identifier
