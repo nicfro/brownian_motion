@@ -8,14 +8,13 @@ from scipy import spatial
 
 class Collide:
     def __init__(self, particles):
-        self.collision_cells = defaultdict(lambda: defaultdict(list))
-        self.cell_size = settings["big_particle_radius"]
+        self.collision_distance = settings["big_particle_radius"]
         self.particles = particles
         self.tree = spatial.cKDTree(np.array([x.position for x in particles]))
         self.handle_collisions()
 
     def handle_collisions(self):
-        for x, y in self.tree.query_pairs(self.cell_size):
+        for x, y in self.tree.query_pairs(self.collision_distance):
             x = self.particles[x]
             y = self.particles[y]
 
@@ -23,8 +22,6 @@ class Collide:
                 self.change_velocities(x, y)
                 y.last_collision = x.identifier
                 x.last_collision = y.identifier
-
-
 
     def change_velocities(self, p1, p2):
         m1, m2 = p1.radius**2, p2.radius**2
