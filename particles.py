@@ -22,10 +22,8 @@ class Particle:
         self.identifier = identifier
         self.radius = radius
         self.density = density
-        #self.color = self.density * RGB GRADIENT
+        self.weight = self.radius**2 * self.density
         self.position = np.array([uniform(0 + self.radius, settings["x_boundary"] - self.radius), uniform(0 + self.radius, settings["y_boundary"] - self.radius)])
-
-
         self.rotation = np.array([np.cos(uniform(0, math.pi*2)), np.sin(uniform(0, math.pi*2))])
         
         self.last_collision = -99
