@@ -49,7 +49,6 @@ while not done:
         pygame.draw.circle(color=RED, surface=screen, center=particle.position, radius=particle.radius)
         particle.update_position()
     
-
     # --- Limit to 60 frames per second
     pygame.display.flip()
     clock.tick(60)

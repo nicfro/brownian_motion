@@ -5,7 +5,6 @@ from itertools import combinations
 from config import settings
 from scipy import spatial
 
-
 class Collide:
     def __init__(self, particles):
         self.collision_distance = settings["big_particle_radius"]
@@ -18,10 +17,11 @@ class Collide:
             x = self.particles[x]
             y = self.particles[y]
 
-            if (x.identifier != y.last_collision) or (y.identifier != x.last_collision):
-                self.change_velocities(x, y)
-                y.last_collision = x.identifier
-                x.last_collision = y.identifier
+            if (x.identifier not in  y.collision_deque) or (y.identifier not in x.collision_deque):
+                if x.overlaps(y):
+                    self.change_velocities(x, y)
+                    y.last_collision = x.identifier
+                    x.last_collision = y.identifier
 
     def change_velocities(self, p1, p2):
         m1, m2 = p1.radius**2, p2.radius**2

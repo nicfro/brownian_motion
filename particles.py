@@ -2,6 +2,7 @@ from config import settings
 from random import randint, uniform
 import numpy as np
 import math
+from collections import deque  
 
 
 # TODO 
@@ -15,6 +16,7 @@ import math
 # 3) 
 # Handle repeated collisions, perhaps a queue could work
 
+
 class Particle:
     def __init__(self, identifier, radius = 1, velocity = None, density = 2):
         self.identifier = identifier
@@ -22,15 +24,18 @@ class Particle:
         self.density = density
         #self.color = self.density * RGB GRADIENT
         self.position = np.array([uniform(0 + self.radius, settings["x_boundary"] - self.radius), uniform(0 + self.radius, settings["y_boundary"] - self.radius)])
-        self.update_properties()
+
 
         self.rotation = np.array([np.cos(uniform(0, math.pi*2)), np.sin(uniform(0, math.pi*2))])
+        
+        self.last_collision = -99
+        self.collision_deque = deque([-99, -99, -99], 5)
+
+        self.update_properties()
         if velocity:
             self.velocity = np.array(velocity)
         else:
             self.velocity = np.array(uniform(settings["velocity_min"], settings["velocity_max"]) * self.rotation)
-        self.speed = np.linalg.norm(self.velocity)
-        self.last_collision = -99
 
     @property
     def x(self):
@@ -74,7 +79,10 @@ class Particle:
         self.bottom = self.y + self.radius
         self.collision_box_x = self.x - (self.x % (settings["big_particle_radius"] * 2))
         self.collision_box_y = self.y - (self.y % (settings["big_particle_radius"] * 2))
-        #self.last_collision = -99
+        if self.last_collision != -99:
+            self.collision_deque.append(self.last_collision)
+        else:
+            self.collision_deque.append(-99)
 
     def update_position(self):
         # check if particle is colliding with right or left wall
