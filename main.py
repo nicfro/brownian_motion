@@ -5,6 +5,7 @@ import particles
 from config import settings
 from collections import defaultdict
 import collider
+import collider_ball_tree
 import random
 
 BLACK = (0, 0, 0)
@@ -42,7 +43,7 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
 
-    collider.Collide(particles = particles_array)
+    collider_ball_tree.Collide(particles = particles_array)
 
     for particle in particles_array:
         pygame.draw.circle(color=RED, surface=screen, center=particle.position, radius=particle.radius)

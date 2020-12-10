@@ -6,11 +6,14 @@ import math
 
 # TODO 
 # 1)
-#  Create color scheme based on particle density
-# Implement color here & in main
+# Fix collision detection with delaunay triangulation
 #
 # 2) 
-# Fix collision detection with delaunay triangulation
+# Create color scheme based on particle density
+# Implement color here & in main
+#
+# 3) 
+# Handle repeated collisions, perhaps a queue could work
 
 class Particle:
     def __init__(self, identifier, radius = 1, velocity = None, density = 2):
