@@ -3,31 +3,14 @@ from collections import defaultdict
 import numpy as np
 from itertools import combinations
 from config import settings
+from scipy import spatial
 
 class Collide:
     def __init__(self, particles):
-        self.collision_cells = defaultdict(lambda: defaultdict(list))
-        self.cell_size = settings["big_particle_radius"] * 2
+        self.collision_distance = settings["big_particle_radius"] * 1.5
         self.particles = particles
-        self.populate_collision_cells()
+        self.tree = spatial.cKDTree(np.array([x.position for x in particles]))
         self.handle_collisions()
-
-    def populate_collision_cells(self):
-        for particle in self.particles:
-            self.collision_cells[particle.collision_box_x][particle.collision_box_y].append(particle)
-
-    def handle_collisions(self):
-        for i in self.collision_cells:
-            for j in self.collision_cells[i]:
-                if len(self.collision_cells[i][j]) > 1:
-                    pairs = combinations(self.collision_cells[i][j], 2)
-                    for x,y in pairs:
-                        if x.overlaps(y):
-                            if (x.identifier != y.last_collision) or (y.identifier != x.last_collision):
-                                self.change_velocities(x, y)
-                                y.last_collision = x.identifier
-                                x.last_collision = y.identifier
-
 
     def change_velocities(self, p1, p2):
         m1, m2 = p1.radius**2, p2.radius**2
@@ -39,3 +22,17 @@ class Collide:
         u2 = v2 - 2*m1 / M * np.dot(v2-v1, r2-r1) / d * (r2 - r1)
         p1.velocity = u1
         p2.velocity = u2
+
+    def handle_collisions(self):
+        for x, y in self.tree.query_pairs(self.collision_distance):
+            x = self.particles[x]
+            y = self.particles[y]
+
+            if (x.identifier not in  y.collision_deque) or (y.identifier not in x.collision_deque):
+                if x.overlaps(y):
+                    self.change_velocities(x, y)
+                    y.last_collision = x.identifier
+                    y.recent_collision = True
+                    x.last_collision = y.identifier
+                    x.recent_collision = True
+

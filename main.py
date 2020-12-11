@@ -5,7 +5,6 @@ import particles
 from config import settings
 from collections import defaultdict
 import collider
-import collider_ball_tree
 import random
 from color_helper import Color_helper
 
@@ -33,10 +32,8 @@ counter = 0
 min_weight = 99999
 max_weight = 0
 
-
-
 for i in range(settings["number_of_particles"]):
-    particle = particles.Particle(identifier = counter, radius = random.uniform(2, 20), density = random.uniform(2, 10))
+    particle = particles.Particle(identifier = counter, radius = random.uniform(5, 20), density = random.uniform(1, 10))
     #particle = particles.Particle(identifier = counter, radius = settings["small_particle_radius"])
 
     if particle.weight < min_weight:
@@ -61,7 +58,7 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
 
-    collider_ball_tree.Collide(particles = particles_array)
+    collider.Collide(particles = particles_array)
 
     for particle in particles_array:
         pygame.draw.circle(color=color.get_color(particle.weight), surface=screen, center=particle.position, radius=particle.radius)

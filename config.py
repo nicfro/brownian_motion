@@ -4,7 +4,7 @@ settings = {"velocity_min": 1,
             "y_boundary": 800,
             "small_particle_radius": 5,
             "big_particle_radius": 50,
-            "number_of_particles": 100,
+            "number_of_particles": 200,
             "density_min": 2,
             "density_max": 20
            }

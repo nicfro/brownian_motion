@@ -6,17 +6,12 @@ from collections import deque
 
 
 # TODO 
-# 1)
-# Fix collision detection with delaunay triangulation
+# 1) Make a particle spawner
+#   * Make sure particle dont spawn on top of each other
 #
-# 2) 
-# Create color scheme based on particle density
-# Implement color here & in main
+# 2) Bind color as an attribute to the particle
 #
-# 3) 
-# Handle repeated collisions, perhaps a queue could work
-
-
+#
 class Particle:
     def __init__(self, identifier, radius = 1, velocity = None, density = 2):
         self.identifier = identifier
@@ -27,9 +22,9 @@ class Particle:
         self.rotation = np.array([np.cos(uniform(0, math.pi*2)), np.sin(uniform(0, math.pi*2))])
         
         self.last_collision = -99
-        self.collision_deque = deque([-99, -99, -99], 5)
+        self.recent_collision = False
+        self.collision_deque = deque([], 5)
 
-        self.update_properties()
         if velocity:
             self.velocity = np.array(velocity)
         else:
@@ -70,38 +65,24 @@ class Particle:
     def __repr__(self):
         return f"Particle with velocity {self.velocity}, position {self.position}, rotation {self.rotation} and speed {self.speed}"
     
-    def update_properties(self):
-        self.right = self.x + self.radius
-        self.left = self.x - self.radius
-        self.top = self.y - self.radius
-        self.bottom = self.y + self.radius
-        self.collision_box_x = self.x - (self.x % (settings["big_particle_radius"] * 2))
-        self.collision_box_y = self.y - (self.y % (settings["big_particle_radius"] * 2))
-        if self.last_collision != -99:
+    def update_position(self):
+        # Check if particle is colliding with right or left wall
+        if (self.x + self.radius >= settings["x_boundary"]) or (self.x - self.radius <= 0):
+            self.velocity_x = -self.velocity_x
+
+        # Check if particle is colliding with top or bottom wall
+        if (self.y + self.radius >= settings["y_boundary"]) or (self.y - self.radius <= 0):
+            self.velocity_y = -self.velocity_y
+
+        # Update particle position
+        self.position += self.velocity
+
+        # Handle collision queue such that particles do not double collide
+        if self.recent_collision:
             self.collision_deque.append(self.last_collision)
         else:
             self.collision_deque.append(-99)
-
-    def update_position(self):
-        # check if particle is colliding with right or left wall
-        if self.right >= settings["x_boundary"] or self.left <= 0:
-            self.velocity_x = -self.velocity_x
-
-        # check if particle is colliding with top or bottom wall
-        if self.bottom >= settings["y_boundary"] or self.top <= 0:
-            self.velocity_y = -self.velocity_y
-
-
-        self.position += self.velocity
-        self.update_properties()
+        self.recent_collision = False
 
     def overlaps(self, other_particle):
         return np.hypot(*(self.position - other_particle.position)) < self.radius + other_particle.radius
-
-        
-        
-
-        
-    
-
-#particle1 = Particle()
