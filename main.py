@@ -33,8 +33,8 @@ min_weight = 99999
 max_weight = 0
 
 for i in range(settings["number_of_particles"]):
-    particle = particles.Particle(identifier = counter, radius = random.uniform(5, 20), density = random.uniform(1, 10))
-    #particle = particles.Particle(identifier = counter, radius = settings["small_particle_radius"])
+    #particle = particles.Particle(identifier = counter, radius = random.uniform(5, 20), density = random.uniform(1, 10))
+    particle = particles.Particle(identifier = counter, radius = settings["small_particle_radius"])
 
     if particle.weight < min_weight:
         min_weight = particle.weight
