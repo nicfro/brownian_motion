@@ -17,7 +17,9 @@ class Particle:
         self.identifier = identifier
         self.radius = radius
         self.density = density
-        self.weight = self.radius**2 * self.density
+        #color = Color_helper(GREEN, RED, max_weight, min_weight)
+        self.color = (255, 0, 0)
+        self.weight = (self.radius**2) * self.density
         self.position = np.array([uniform(0 + self.radius, settings["x_boundary"] - self.radius), uniform(0 + self.radius, settings["y_boundary"] - self.radius)])
         self.rotation = np.array([np.cos(uniform(0, math.pi*2)), np.sin(uniform(0, math.pi*2))])
         
@@ -63,7 +65,7 @@ class Particle:
         self.velocity[1] = value
 
     def __repr__(self):
-        return f"Particle with velocity {self.velocity}, position {self.position}, rotation {self.rotation} and speed {self.speed}"
+        return f"Particle with velocity {self.velocity}, position {self.position}, rotation {self.rotation}"
     
     def update_position(self):
         # Check if particle is colliding with right or left wall

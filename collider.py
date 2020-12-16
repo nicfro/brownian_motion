@@ -36,3 +36,11 @@ class Collide:
                     x.last_collision = y.identifier
                     x.recent_collision = True
 
+    def get_collisions(self):
+        collisions = []
+        for x, y in self.tree.query_pairs(self.collision_distance):
+            #x = self.particles[x]
+            #y = self.particles[y]
+            collisions.append([x,y])
+        return collisions
+
